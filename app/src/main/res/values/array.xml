@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort">
+
+        <item>Most Popular</item>
+        <item>Highest Rated</item>
+
+    </string-array>
+
+    <string-array name="urls">
+
+        <item>http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&amp;api_key=0359c81bed7cce4e13cd5a744ea5cfbe</item>
+        <item>http://api.themoviedb.org/3/discover/movie?sort_by=vote_count.desc&amp;api_key=0359c81bed7cce4e13cd5a744ea5cfbe</item>
+
+    </string-array>
+
+
+</resources>
