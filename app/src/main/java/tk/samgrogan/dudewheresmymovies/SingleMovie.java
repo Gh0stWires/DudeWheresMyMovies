@@ -30,6 +30,10 @@ public class SingleMovie {
         return this.mContent;
     }
 
+    public String getContentList(int position){
+        return this.mContent.get(position);
+    }
+
     public void setTrailer(String trailer){
         this.mTrailer.add(trailer);
     }

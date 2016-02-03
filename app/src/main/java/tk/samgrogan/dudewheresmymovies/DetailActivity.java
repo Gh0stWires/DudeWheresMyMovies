@@ -1,6 +1,7 @@
 package tk.samgrogan.dudewheresmymovies;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -80,6 +83,7 @@ public class DetailActivity extends ActionBarActivity {
 
 
 
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -90,6 +94,8 @@ public class DetailActivity extends ActionBarActivity {
         ListView trailerList;
         ListView reviewList;
         SingleMovie mMovie = new SingleMovie();
+        DBHandler dbHandler;
+        ImageButton favButton;
 
         public DetailFragment() {
         }
@@ -100,8 +106,12 @@ public class DetailActivity extends ActionBarActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent mainData = getActivity().getIntent();
+
+            dbHandler = new DBHandler(getActivity(),null,null,1);
+            //get movie id for use with trailer and review urls
             mMovie.setmId(mainData.getStringExtra("ID"));
 
+           //Set Trailer and Review URLS
             String tUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/videos?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
             String rUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/reviews?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
             URL tapiUrl = null;
@@ -112,24 +122,26 @@ public class DetailActivity extends ActionBarActivity {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-
+            // Start background threads
             GetTrailers trailersTask = new GetTrailers();
             GetReviews reviewsTask = new GetReviews();
             trailersTask.execute(tapiUrl);
             reviewsTask.execute(rapiUrl);
 
-
+            //Set array adapters for the trailer and reviews list views
             tAdapter = new ArrayAdapter(getActivity(), R.layout.trailer_item, mMovie.getTrailerTitle());
             rAdapter = new ArrayAdapter(getActivity(), R.layout.trailer_item, mMovie.getmContent());
-
+            //Retrieve data from MoviesFragment activity and store it in the movies object
             mMovie.setPoster(mainData.getStringExtra("POSTER"));
             mMovie.setTitle(mainData.getStringExtra("TITLE"));
             mMovie.setDesc(mainData.getStringExtra("DESC"));
             mMovie.setRate(mainData.getStringExtra("RATE"));
             Float rate = Float.parseFloat(mainData.getStringExtra("RATE"));
             mMovie.setDate(mainData.getStringExtra("DATE"));
-            ImageView imageView = (ImageView)rootView.findViewById(R.id.poster);
 
+            //References to views in fragment_detail
+            ImageView imageView = (ImageView)rootView.findViewById(R.id.poster);
+            favButton = (ImageButton)rootView.findViewById(R.id.favorite_button);
             TextView titleTextView = (TextView)rootView.findViewById(R.id.title);
             TextView descTextView = (TextView) rootView.findViewById(R.id.desc);
             TextView dateTextView = (TextView) rootView.findViewById(R.id.release);
@@ -138,7 +150,7 @@ public class DetailActivity extends ActionBarActivity {
             reviewList = (ListView) rootView.findViewById(R.id.reviews);
 
 
-
+           //Populate the views in the layout with data
             titleTextView.setText(mMovie.getTitle());
             descTextView.setText("Synopsis: \n" + mMovie.getDesc());
             dateTextView.setText("Release Date:  " + mMovie.getDate());
@@ -149,6 +161,7 @@ public class DetailActivity extends ActionBarActivity {
                     .load(mMovie.getPoster())
                     .into(imageView);
 
+            //Listen for Item in trailer list to be clicked and launch youtube with corresonding url
             trailerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -156,10 +169,23 @@ public class DetailActivity extends ActionBarActivity {
                 }
             });
 
+            favButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addFavorite();
+                }
+            });
+
             return rootView;
         }
 
+        public void addFavorite(){
+            dbHandler.addMovie(mMovie);
+            String dbs = dbHandler.dataBaseToString();
+            Toast.makeText(getActivity(),dbs,Toast.LENGTH_LONG).show();
+        }
 
+        //Thread for Trailer
         public class GetTrailers extends AsyncTask<URL, Void, Void> {
 
             HttpURLConnection urlConnection = null;
@@ -248,7 +274,7 @@ public class DetailActivity extends ActionBarActivity {
             }
         }
 
-
+        //Thread for Review
         public class GetReviews extends AsyncTask<URL, Void, Void> {
 
             HttpURLConnection urlConnection = null;
