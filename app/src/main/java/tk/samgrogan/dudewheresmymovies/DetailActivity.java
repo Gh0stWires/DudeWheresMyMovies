@@ -107,7 +107,9 @@ public class DetailActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent mainData = getActivity().getIntent();
 
-            dbHandler = new DBHandler(getActivity(),null,null,1);
+            dbHandler = new DBHandler(rootView.getContext(),null,null,1);
+
+
             //get movie id for use with trailer and review urls
             mMovie.setmId(mainData.getStringExtra("ID"));
 
@@ -172,7 +174,8 @@ public class DetailActivity extends ActionBarActivity {
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    addFavorite();
+                    DBThread dbThread = new DBThread();
+                    dbThread.execute();
                 }
             });
 
@@ -180,9 +183,8 @@ public class DetailActivity extends ActionBarActivity {
         }
 
         public void addFavorite(){
-            dbHandler.addMovie(mMovie);
-            String dbs = dbHandler.dataBaseToString();
-            Toast.makeText(getActivity(),dbs,Toast.LENGTH_LONG).show();
+
+
         }
 
         //Thread for Trailer
@@ -360,6 +362,22 @@ public class DetailActivity extends ActionBarActivity {
                 reviewList.setAdapter(rAdapter);
 
 
+            }
+        }
+
+        public class DBThread extends AsyncTask<Void, Void, Void>{
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                dbHandler.addMovie(mMovie);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                String dbs = dbHandler.dataBaseToString();
+                Toast.makeText(getActivity(),dbs,Toast.LENGTH_LONG).show();
             }
         }
 
