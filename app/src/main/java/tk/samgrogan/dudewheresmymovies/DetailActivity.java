@@ -1,13 +1,12 @@
 package tk.samgrogan.dudewheresmymovies;
 
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,14 +20,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,10 +34,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-public class DetailActivity extends ActionBarActivity {
+public class DetailActivity extends AppCompatActivity {
 
 
     @Override
@@ -78,6 +73,18 @@ public class DetailActivity extends ActionBarActivity {
             startActivity(intent);
         }
 
+        if (id == R.id.action_favorites) {
+            Intent intent;
+            intent = new Intent(this, FavoritesActivity.class);
+
+            startActivity(intent);
+        }
+        if (id == R.id.action_ugradeDB) {
+            DBHandler dbHandler = new DBHandler(getApplicationContext());
+            SQLiteDatabase db = dbHandler.getWritableDatabase();
+            dbHandler.onUpgrade(db, 4, 4);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -107,7 +114,7 @@ public class DetailActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent mainData = getActivity().getIntent();
 
-            dbHandler = new DBHandler(rootView.getContext(),null,null,1);
+            dbHandler = new DBHandler(rootView.getContext());
 
 
             //get movie id for use with trailer and review urls
@@ -373,12 +380,7 @@ public class DetailActivity extends ActionBarActivity {
                 return null;
             }
 
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                String dbs = dbHandler.dataBaseToString();
-                Toast.makeText(getActivity(),dbs,Toast.LENGTH_LONG).show();
-            }
+
         }
 
     }
