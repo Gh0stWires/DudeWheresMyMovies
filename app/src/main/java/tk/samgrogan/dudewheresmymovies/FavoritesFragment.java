@@ -26,7 +26,7 @@ public class FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_favorites, container, false);
         dbHandler = new DBHandler(rootView.getContext());
 
         dbHandler.dbSetTitles(movies);

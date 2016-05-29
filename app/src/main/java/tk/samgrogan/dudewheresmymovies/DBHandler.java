@@ -62,6 +62,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void deleteMovie(SingleMovie movie){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + MovieEntry.TABLE_NAME + " WHERE " + MovieEntry.COLUMN_MOVIE_ID + "=\"" + movie.getmId() + "\";");
+        db.close();
 
     }
 
@@ -83,6 +84,22 @@ public class DBHandler extends SQLiteOpenHelper {
 
         c.close();
         db.close();
+    }
+
+    public boolean checkTitlte(SingleMovie movie){
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT * FROM " + MovieEntry.TABLE_NAME + " WHERE " + MovieEntry.COLUMN_TITLE + "=\"" + movie.getTitle() + "\";";
+
+        Cursor c = db.rawQuery(query, null);
+
+        if (c.getCount() <= 0){
+            c.close();
+            return false;
+        }else {
+            c.close();
+            return true;
+        }
+
     }
 
     public void dbSetPoster(Movies movies) {

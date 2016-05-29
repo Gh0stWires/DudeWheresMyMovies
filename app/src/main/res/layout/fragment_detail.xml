@@ -44,12 +44,11 @@
                     android:textColor="@color/text"
                     android:textSize="20sp" />
 
-                <ImageButton
+                <ToggleButton
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginBottom="10dp"
                     android:background="@color/background"
-                    android:src="@drawable/fv_off"
                     android:id="@+id/favorite_button"/>
 
                 <TextView

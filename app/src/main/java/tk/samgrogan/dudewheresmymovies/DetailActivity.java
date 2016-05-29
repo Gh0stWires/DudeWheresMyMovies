@@ -15,11 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 
@@ -102,7 +103,7 @@ public class DetailActivity extends AppCompatActivity {
         ListView reviewList;
         SingleMovie mMovie = new SingleMovie();
         DBHandler dbHandler;
-        ImageButton favButton;
+        ToggleButton favButton;
 
         public DetailFragment() {
         }
@@ -121,8 +122,8 @@ public class DetailActivity extends AppCompatActivity {
             mMovie.setmId(mainData.getStringExtra("ID"));
 
            //Set Trailer and Review URLS
-            String tUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/videos?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
-            String rUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/reviews?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
+            String tUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/videos?api_key=API Key";
+            String rUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/reviews?api_key=API Key";
             URL tapiUrl = null;
             URL rapiUrl = null;
             try {
@@ -150,7 +151,7 @@ public class DetailActivity extends AppCompatActivity {
 
             //References to views in fragment_detail
             ImageView imageView = (ImageView)rootView.findViewById(R.id.poster);
-            favButton = (ImageButton)rootView.findViewById(R.id.favorite_button);
+            favButton = (ToggleButton)rootView.findViewById(R.id.favorite_button);
             TextView titleTextView = (TextView)rootView.findViewById(R.id.title);
             TextView descTextView = (TextView) rootView.findViewById(R.id.desc);
             TextView dateTextView = (TextView) rootView.findViewById(R.id.release);
@@ -178,21 +179,31 @@ public class DetailActivity extends AppCompatActivity {
                 }
             });
 
-            favButton.setOnClickListener(new View.OnClickListener() {
+            //Check if the selected film has been favorited
+            if(dbHandler.checkTitlte(mMovie) == true){
+                favButton.setChecked(true);
+            }
+
+
+
+            //TODO change to a toggle button listener
+            favButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onClick(View v) {
-                    DBThread dbThread = new DBThread();
-                    dbThread.execute();
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked){
+                        DBThreadAdd dbThread = new DBThreadAdd();
+                        dbThread.execute();
+                    }else {
+                        DBThreadDelete dbThread = new DBThreadDelete();
+                        dbThread.execute();
+
+                    }
                 }
             });
 
             return rootView;
         }
 
-        public void addFavorite(){
-
-
-        }
 
         //Thread for Trailer
         public class GetTrailers extends AsyncTask<URL, Void, Void> {
@@ -372,11 +383,22 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
-        public class DBThread extends AsyncTask<Void, Void, Void>{
+        public class DBThreadAdd extends AsyncTask<Void, Void, Void>{
 
             @Override
             protected Void doInBackground(Void... params) {
                 dbHandler.addMovie(mMovie);
+                return null;
+            }
+
+
+        }
+
+        public class DBThreadDelete extends AsyncTask<Void, Void, Void>{
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                dbHandler.deleteMovie(mMovie);
                 return null;
             }
 
