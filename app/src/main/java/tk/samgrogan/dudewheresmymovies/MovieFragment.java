@@ -2,20 +2,15 @@ package tk.samgrogan.dudewheresmymovies;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,9 +23,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Gh0st on 1/16/2016.
@@ -47,6 +39,7 @@ public  class MovieFragment extends Fragment {
     Movies mMovies = new Movies();
     GridView gridView;
     ImageArrayAdapter adapter;
+    Boolean twoPane;
 
 
     public MovieFragment() {
@@ -54,9 +47,18 @@ public  class MovieFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
+                             final Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
         adapter = new ImageArrayAdapter(getActivity(), mMovies.getMList());
+
+        if (rootView.findViewById(R.id.container) != null){
+            twoPane = true;
+
+        }else {
+            twoPane = false;
+        }
+
+        System.out.println(twoPane);
         //updateMovies();
         //new GetMovies().execute();
 
@@ -69,20 +71,45 @@ public  class MovieFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String posterUrl = adapter.getItem(position);
-                String titleString = mMovies.getTitles(position);
-                String descString = mMovies.getDesc(position);
-                String rateString = mMovies.getRating(position);
-                String date = mMovies.getReleaseDate(position);
-                String idString = mMovies.getmId(position);
-                Intent intent = new Intent(getActivity(),DetailActivity.class)
-                        .putExtra("POSTER", posterUrl)
-                        .putExtra("TITLE", titleString)
-                        .putExtra("DESC",descString)
-                        .putExtra("RATE",rateString)
-                        .putExtra("DATE",date)
-                        .putExtra("ID", idString);
-                startActivity(intent);
+                if (twoPane){
+                    String posterUrl = adapter.getItem(position);
+                    String titleString = mMovies.getTitles(position);
+                    String descString = mMovies.getDesc(position);
+                    String rateString = mMovies.getRating(position);
+                    String date = mMovies.getReleaseDate(position);
+                    String idString = mMovies.getmId(position);
+
+                    Bundle args = new Bundle();
+                    args.putString("POSTER", posterUrl);
+                    args.putString("TITLE", titleString);
+                    args.putString("DESC",descString);
+                    args.putString("RATE",rateString);
+                    args.putString("DATE",date);
+                    args.putString("ID", idString);
+
+                    Fragment fragment = new DetailFragment();
+                    fragment.setArguments(args);
+
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, fragment)
+                            .commit();
+
+                }else {
+                    String posterUrl = adapter.getItem(position);
+                    String titleString = mMovies.getTitles(position);
+                    String descString = mMovies.getDesc(position);
+                    String rateString = mMovies.getRating(position);
+                    String date = mMovies.getReleaseDate(position);
+                    String idString = mMovies.getmId(position);
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .putExtra("POSTER", posterUrl)
+                            .putExtra("TITLE", titleString)
+                            .putExtra("DESC", descString)
+                            .putExtra("RATE", rateString)
+                            .putExtra("DATE", date)
+                            .putExtra("ID", idString);
+                    startActivity(intent);
+                }
             }
         });
 

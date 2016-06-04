@@ -21,6 +21,7 @@ public class FavoritesFragment extends Fragment {
     DBHandler dbHandler;
     Movies movies = new Movies();
     ListView mList;
+    Boolean twoPane = true;
 
 
     @Override
@@ -45,20 +46,45 @@ public class FavoritesFragment extends Fragment {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String posterUrl = movies.getMovies(position);
-                String titleString = movies.getTitles(position);
-                String descString = movies.getDesc(position);
-                String rateString = movies.getRating(position);
-                String date = movies.getReleaseDate(position);
-                String idString = movies.getmId(position);
-                Intent intent = new Intent(getActivity(),DetailActivity.class)
-                        .putExtra("POSTER", posterUrl)
-                        .putExtra("TITLE", titleString)
-                        .putExtra("DESC",descString)
-                        .putExtra("RATE",rateString)
-                        .putExtra("DATE",date)
-                        .putExtra("ID", idString);
-                startActivity(intent);
+                if (twoPane){
+                    String posterUrl = movies.getMovies(position);
+                    String titleString = movies.getTitles(position);
+                    String descString = movies.getDesc(position);
+                    String rateString = movies.getRating(position);
+                    String date = movies.getReleaseDate(position);
+                    String idString = movies.getmId(position);
+
+                    Bundle args = new Bundle();
+                    args.putString("POSTER", posterUrl);
+                    args.putString("TITLE", titleString);
+                    args.putString("DESC",descString);
+                    args.putString("RATE",rateString);
+                    args.putString("DATE",date);
+                    args.putString("ID", idString);
+
+                    Fragment fragment = new DetailFragment();
+                    fragment.setArguments(args);
+
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container1, fragment)
+                            .commit();
+
+                }else {
+                    String posterUrl = movies.getMovies(position);
+                    String titleString = movies.getTitles(position);
+                    String descString = movies.getDesc(position);
+                    String rateString = movies.getRating(position);
+                    String date = movies.getReleaseDate(position);
+                    String idString = movies.getmId(position);
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .putExtra("POSTER", posterUrl)
+                            .putExtra("TITLE", titleString)
+                            .putExtra("DESC", descString)
+                            .putExtra("RATE", rateString)
+                            .putExtra("DATE", date)
+                            .putExtra("ID", idString);
+                    startActivity(intent);
+                }
             }
         });
 

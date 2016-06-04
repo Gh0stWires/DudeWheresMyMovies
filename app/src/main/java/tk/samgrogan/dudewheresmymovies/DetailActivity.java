@@ -1,40 +1,11 @@
 package tk.samgrogan.dudewheresmymovies;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.TextView;
-import android.widget.ToggleButton;
-
-import com.bumptech.glide.Glide;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -95,7 +66,7 @@ public class DetailActivity extends AppCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class DetailFragment extends Fragment {
+    /*public static class DetailFragment extends Fragment {
 
         ArrayAdapter tAdapter;
         ArrayAdapter rAdapter;
@@ -122,8 +93,8 @@ public class DetailActivity extends AppCompatActivity {
             mMovie.setmId(mainData.getStringExtra("ID"));
 
            //Set Trailer and Review URLS
-            String tUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/videos?api_key=API Key";
-            String rUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/reviews?api_key=API Key";
+            String tUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/videos?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
+            String rUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/reviews?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
             URL tapiUrl = null;
             URL rapiUrl = null;
             try {
@@ -405,7 +376,7 @@ public class DetailActivity extends AppCompatActivity {
 
         }
 
-    }
+    }*/
 
 
 }

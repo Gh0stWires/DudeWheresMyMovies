@@ -13,7 +13,7 @@
         app:showAsAction="never" />
     <item xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/action_favorites"
-        android:icon="@drawable/abc_btn_rating_star_on_mtrl_alpha"
+        android:icon="@drawable/basic1"
         android:orderInCategory="100"
         android:title="@string/title_favorites"
         app:showAsAction="always" />
