@@ -14,6 +14,7 @@ public class Movies {
     private List<String> rating = new ArrayList<String>();
     private List<String> releaseDate = new ArrayList<String>();
     private List<String> mId = new ArrayList<String>();
+    private List<String> posters = new ArrayList<String>();
 
     public Movies(){
 
@@ -41,6 +42,10 @@ public class Movies {
 
     public List<String> getIDList(){
         return mId;
+    }
+
+    public List<String> getPosters(){
+        return posters;
     }
 
     public void setMovies(String movie){
@@ -89,6 +94,14 @@ public class Movies {
 
     public String getmId(int position){
         return this.mId.get(position);
+    }
+
+    public void setPoster(String poster){
+        this.posters.add(poster);
+    }
+
+    public String getPoster(int position){
+        return  this.posters.get(position);
     }
 
 

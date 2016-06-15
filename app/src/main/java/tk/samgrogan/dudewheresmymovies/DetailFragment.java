@@ -1,5 +1,6 @@
 package tk.samgrogan.dudewheresmymovies;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -44,9 +45,32 @@ public class DetailFragment extends Fragment {
     SingleMovie mMovie = new SingleMovie();
     DBHandler dbHandler;
     ToggleButton favButton;
+    TextView favText;
     Float rate;
+    Boolean refresh = false;
+    OnRefreshList mCallback;
 
     public DetailFragment() {
+    }
+
+    public interface OnRefreshList{
+        public void onRefresh(Boolean check);
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnRefreshList) activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString());
+        }
+    }
+
+    public void onCheck() {
+        if (dbHandler.checkTitlte(mMovie) == true) {
+            favButton.setChecked(true);
+            favText.setText("Remove from Favorites");
+        }
     }
 
     @Override
@@ -91,6 +115,8 @@ public class DetailFragment extends Fragment {
         }
 
 
+
+
         //Set Trailer and Review URLS
         String tUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/videos?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
         String rUrlString = "http://api.themoviedb.org/3/movie/" + mMovie.getmId() + "/reviews?api_key=0359c81bed7cce4e13cd5a744ea5cfbe";
@@ -116,6 +142,7 @@ public class DetailFragment extends Fragment {
         //References to views in fragment_detail
         ImageView imageView = (ImageView)rootView.findViewById(R.id.poster);
         favButton = (ToggleButton)rootView.findViewById(R.id.favorite_button);
+        favText = (TextView)rootView.findViewById(R.id.fav_text);
         TextView titleTextView = (TextView)rootView.findViewById(R.id.title);
         TextView descTextView = (TextView) rootView.findViewById(R.id.desc);
         TextView dateTextView = (TextView) rootView.findViewById(R.id.release);
@@ -144,9 +171,8 @@ public class DetailFragment extends Fragment {
         });
 
         //Check if the selected film has been favorited
-        if(dbHandler.checkTitlte(mMovie) == true){
-            favButton.setChecked(true);
-        }
+        this.onCheck();
+
 
 
 
@@ -157,16 +183,23 @@ public class DetailFragment extends Fragment {
                 if (isChecked){
                     DBThreadAdd dbThread = new DBThreadAdd();
                     dbThread.execute();
+                    favText.setText("Remove from Favorites");
                 }else {
                     DBThreadDelete dbThread = new DBThreadDelete();
                     dbThread.execute();
+                    favText.setText("Add to Favorites");
+                    refresh = true;
+                    mCallback.onRefresh(refresh);
 
                 }
             }
         });
 
+
+
         return rootView;
     }
+
 
 
     //Thread for Trailer

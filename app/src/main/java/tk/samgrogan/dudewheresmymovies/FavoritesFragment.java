@@ -1,9 +1,9 @@
 package tk.samgrogan.dudewheresmymovies;
 
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.app.Activity;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +21,46 @@ public class FavoritesFragment extends Fragment {
     DBHandler dbHandler;
     Movies movies = new Movies();
     ListView mList;
-    Boolean twoPane = true;
+    OnMovieSelected mCallback;
+
+    public interface OnMovieSelected{
+        public void onMovie(Movies movies, int position);
+    }
+
+    //TODO I'm so close
+    public void onDbChanged(){
+        mAdapter.clear();
+        movies.getMList().clear();
+        movies.getTList().clear();
+        movies.getDList().clear();
+        movies.getRList().clear();
+        movies.getRDList().clear();
+        movies.getIDList().clear();
+        dbHandler.dbSetTitles(movies);
+        dbHandler.dbSetPoster(movies);
+        dbHandler.dbSetDate(movies);
+        dbHandler.dbSetDesc(movies);
+        dbHandler.dbSetMovieId(movies);
+        dbHandler.dbSetRate(movies);
+        movies.getTList();
+
+
+
+
+        //mList.setAdapter(mAdapter);
+    }
+
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnMovieSelected)activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString());
+        }
+    }
 
 
     @Override
@@ -37,6 +76,8 @@ public class FavoritesFragment extends Fragment {
         dbHandler.dbSetMovieId(movies);
         dbHandler.dbSetRate(movies);
 
+
+
         mAdapter = new ArrayAdapter(getActivity(), R.layout.trailer_item, movies.getTList());
 
         mList = (ListView) rootView.findViewById(R.id.db_titles);
@@ -46,45 +87,8 @@ public class FavoritesFragment extends Fragment {
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (twoPane){
-                    String posterUrl = movies.getMovies(position);
-                    String titleString = movies.getTitles(position);
-                    String descString = movies.getDesc(position);
-                    String rateString = movies.getRating(position);
-                    String date = movies.getReleaseDate(position);
-                    String idString = movies.getmId(position);
+                mCallback.onMovie(movies, position);
 
-                    Bundle args = new Bundle();
-                    args.putString("POSTER", posterUrl);
-                    args.putString("TITLE", titleString);
-                    args.putString("DESC",descString);
-                    args.putString("RATE",rateString);
-                    args.putString("DATE",date);
-                    args.putString("ID", idString);
-
-                    Fragment fragment = new DetailFragment();
-                    fragment.setArguments(args);
-
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.container1, fragment)
-                            .commit();
-
-                }else {
-                    String posterUrl = movies.getMovies(position);
-                    String titleString = movies.getTitles(position);
-                    String descString = movies.getDesc(position);
-                    String rateString = movies.getRating(position);
-                    String date = movies.getReleaseDate(position);
-                    String idString = movies.getmId(position);
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .putExtra("POSTER", posterUrl)
-                            .putExtra("TITLE", titleString)
-                            .putExtra("DESC", descString)
-                            .putExtra("RATE", rateString)
-                            .putExtra("DATE", date)
-                            .putExtra("ID", idString);
-                    startActivity(intent);
-                }
             }
         });
 
@@ -92,5 +96,6 @@ public class FavoritesFragment extends Fragment {
         // Inflate the layout for this fragment
         return rootView;
     }
+
 
 }

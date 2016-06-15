@@ -1,7 +1,7 @@
 package tk.samgrogan.dudewheresmymovies;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -39,10 +39,25 @@ public  class MovieFragment extends Fragment {
     Movies mMovies = new Movies();
     GridView gridView;
     ImageArrayAdapter adapter;
-    Boolean twoPane;
+    OnMovieSelected mCallback;
+
 
 
     public MovieFragment() {
+    }
+
+    public interface OnMovieSelected{
+        public void onMovie(Movies movie, int position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mCallback = (OnMovieSelected)activity;
+        }catch (ClassCastException e){
+            throw new ClassCastException(activity.toString());
+        }
     }
 
     @Override
@@ -51,14 +66,8 @@ public  class MovieFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
         adapter = new ImageArrayAdapter(getActivity(), mMovies.getMList());
 
-        if (rootView.findViewById(R.id.container) != null){
-            twoPane = true;
 
-        }else {
-            twoPane = false;
-        }
 
-        System.out.println(twoPane);
         //updateMovies();
         //new GetMovies().execute();
 
@@ -71,45 +80,8 @@ public  class MovieFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (twoPane){
-                    String posterUrl = adapter.getItem(position);
-                    String titleString = mMovies.getTitles(position);
-                    String descString = mMovies.getDesc(position);
-                    String rateString = mMovies.getRating(position);
-                    String date = mMovies.getReleaseDate(position);
-                    String idString = mMovies.getmId(position);
+                mCallback.onMovie(mMovies, position);
 
-                    Bundle args = new Bundle();
-                    args.putString("POSTER", posterUrl);
-                    args.putString("TITLE", titleString);
-                    args.putString("DESC",descString);
-                    args.putString("RATE",rateString);
-                    args.putString("DATE",date);
-                    args.putString("ID", idString);
-
-                    Fragment fragment = new DetailFragment();
-                    fragment.setArguments(args);
-
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.container, fragment)
-                            .commit();
-
-                }else {
-                    String posterUrl = adapter.getItem(position);
-                    String titleString = mMovies.getTitles(position);
-                    String descString = mMovies.getDesc(position);
-                    String rateString = mMovies.getRating(position);
-                    String date = mMovies.getReleaseDate(position);
-                    String idString = mMovies.getmId(position);
-                    Intent intent = new Intent(getActivity(), DetailActivity.class)
-                            .putExtra("POSTER", posterUrl)
-                            .putExtra("TITLE", titleString)
-                            .putExtra("DESC", descString)
-                            .putExtra("RATE", rateString)
-                            .putExtra("DATE", date)
-                            .putExtra("ID", idString);
-                    startActivity(intent);
-                }
             }
         });
 
