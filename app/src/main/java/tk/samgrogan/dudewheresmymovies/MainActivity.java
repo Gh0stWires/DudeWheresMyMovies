@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
     Boolean twoPane;
     DetailFragment frag;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
 
 
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
             Intent intent;
             intent = new Intent(this, FavoritesActivity.class);
 
-            startActivity(intent);
+            startActivityForResult(intent, 2);
         }
 
         return super.onOptionsItemSelected(item);
@@ -69,7 +72,14 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 2){
+            frag.onCheck();
 
+        }
+    }
 
     @Override
     public void onMovie(Movies movie, int position) {
@@ -124,14 +134,14 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
         //just here so it wont crash
     }
 
-    @Override
+    /*@Override
     protected void onRestart() {
         super.onRestart();
         finish();
-        startActivity(getIntent());
+        startActivity(getIntent());*/
 
         /*if (frag != null){
             frag.onCheck();
         }*/
-    }
+
 }

@@ -23,12 +23,12 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesFra
 
     }
 
-    @Override
+    /*@Override
     protected void onRestart() {
         super.onRestart();
         finish();
         startActivity(getIntent());
-    }
+    }*/
 
     @Override
     public void onMovie(Movies movies, int position) {
@@ -73,6 +73,12 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesFra
             startActivity(intent);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(2);
     }
 
     @Override
