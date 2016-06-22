@@ -1,5 +1,6 @@
 package tk.samgrogan.dudewheresmymovies;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -75,8 +76,11 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 2){
-            frag.onCheck();
+        if (requestCode == 2){
+            if (resultCode == Activity.RESULT_OK) {
+                frag.onCheck();
+                Log.w("Check Run", "IT RAN");
+            }
 
         }
     }

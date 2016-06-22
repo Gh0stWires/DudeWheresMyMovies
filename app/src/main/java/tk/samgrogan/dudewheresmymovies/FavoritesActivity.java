@@ -1,5 +1,6 @@
 package tk.samgrogan.dudewheresmymovies;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -78,7 +79,9 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesFra
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        setResult(2);
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
     }
 
     @Override
