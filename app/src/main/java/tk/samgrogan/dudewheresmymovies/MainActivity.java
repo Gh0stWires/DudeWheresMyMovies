@@ -1,7 +1,5 @@
 package tk.samgrogan.dudewheresmymovies;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -13,7 +11,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements MovieFragment.OnMovieSelected, DetailFragment.OnRefreshList {
 
     Boolean twoPane;
-    DetailFragment frag;
+    DetailFragment fragment;
 
 
     @Override
@@ -21,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.w("onCreate","onCreate");
-        frag = (DetailFragment) getFragmentManager().findFragmentById(R.id.container);
+        //frag = (DetailFragment) getFragmentManager().findFragmentById(R.id.container);
         if (findViewById(R.id.container) != null){
             twoPane = true;
 
@@ -76,9 +74,12 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.w("Code", String.valueOf(requestCode));
         if (requestCode == 2){
-            if (resultCode == Activity.RESULT_OK) {
-                frag.onCheck();
+            Log.w("Code", String.valueOf(resultCode));
+            if (resultCode == 5) {
+                fragment = (DetailFragment) getFragmentManager().findFragmentById(R.id.container);
+                fragment.onCheck();
                 Log.w("Check Run", "IT RAN");
             }
 
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
             args.putString("DATE",date);
             args.putString("ID", idString);
 
-            Fragment fragment = new DetailFragment();
+            fragment = new DetailFragment();
             fragment.setArguments(args);
 
             getFragmentManager().beginTransaction()
