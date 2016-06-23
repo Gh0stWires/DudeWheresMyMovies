@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Gh0st on 1/16/2016.
@@ -64,9 +65,10 @@ public  class MovieFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
         adapter = new ImageArrayAdapter(getActivity(), mMovies.getMList());
-
-
-        updateMovies();
+        Log.w("Survey Says", String.valueOf(savedInstanceState));
+        if (savedInstanceState == null) {
+            updateMovies();
+        }
         //new GetMovies().execute();
 
         gridView = (GridView) rootView.findViewById(R.id.movie_item_image_grid);
@@ -108,9 +110,9 @@ public  class MovieFragment extends Fragment {
 
     }
 
-    /*@Override
+    @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+
 
         outState.putStringArrayList("Poster", (ArrayList<String>) mMovies.getMList());
         outState.putStringArrayList("Title", (ArrayList<String>) mMovies.getTList());
@@ -118,12 +120,19 @@ public  class MovieFragment extends Fragment {
         outState.putStringArrayList("Rating", (ArrayList<String>) mMovies.getRList());
         outState.putStringArrayList("ReleaseDate", (ArrayList<String>) mMovies.getRDList());
         outState.putStringArrayList("ID", (ArrayList<String>) mMovies.getIDList());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null){
+            mMovies.getMList().clear();
+            mMovies.getTList().clear();
+            mMovies.getDList().clear();
+            mMovies.getRList().clear();
+            mMovies.getRDList().clear();
+            mMovies.getIDList().clear();
             mMovies.setMList(savedInstanceState.getStringArrayList("Poster"));
             mMovies.setTList(savedInstanceState.getStringArrayList("Title"));
             mMovies.setDList(savedInstanceState.getStringArrayList("Desc"));
@@ -134,7 +143,7 @@ public  class MovieFragment extends Fragment {
             gridView.setAdapter(adapter);
         }
 
-    }*/
+    }
 
     @Override
     public void onStop() {
