@@ -61,14 +61,12 @@ public  class MovieFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             final Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
         adapter = new ImageArrayAdapter(getActivity(), mMovies.getMList());
 
 
-
-        //updateMovies();
+        updateMovies();
         //new GetMovies().execute();
 
         gridView = (GridView) rootView.findViewById(R.id.movie_item_image_grid);
@@ -110,6 +108,34 @@ public  class MovieFragment extends Fragment {
 
     }
 
+    /*@Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putStringArrayList("Poster", (ArrayList<String>) mMovies.getMList());
+        outState.putStringArrayList("Title", (ArrayList<String>) mMovies.getTList());
+        outState.putStringArrayList("Desc", (ArrayList<String>) mMovies.getDList());
+        outState.putStringArrayList("Rating", (ArrayList<String>) mMovies.getRList());
+        outState.putStringArrayList("ReleaseDate", (ArrayList<String>) mMovies.getRDList());
+        outState.putStringArrayList("ID", (ArrayList<String>) mMovies.getIDList());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null){
+            mMovies.setMList(savedInstanceState.getStringArrayList("Poster"));
+            mMovies.setTList(savedInstanceState.getStringArrayList("Title"));
+            mMovies.setDList(savedInstanceState.getStringArrayList("Desc"));
+            mMovies.setRList(savedInstanceState.getStringArrayList("Rating"));
+            mMovies.setRDList(savedInstanceState.getStringArrayList("ReleaseDate"));
+            mMovies.setIDList(savedInstanceState.getStringArrayList("ID"));
+            adapter = new ImageArrayAdapter(getActivity(), mMovies.getMList());
+            gridView.setAdapter(adapter);
+        }
+
+    }*/
+
     @Override
     public void onStop() {
         super.onStop();
@@ -127,7 +153,7 @@ public  class MovieFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.w("onResume", "onResume");
-        updateMovies();
+        //updateMovies();
 
     }
 

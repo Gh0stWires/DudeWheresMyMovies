@@ -62,6 +62,12 @@ public class DetailActivity extends AppCompatActivity implements DetailFragment.
 
     @Override
     public void onRefresh(Boolean check) {
+        FavoritesActivity.fa.finish();
+        finish();
+        Intent intent = new Intent(this, FavoritesActivity.class);
+        startActivity(intent);
+
+
 
     }
 

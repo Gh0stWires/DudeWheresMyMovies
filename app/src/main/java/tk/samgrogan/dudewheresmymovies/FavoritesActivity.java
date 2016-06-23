@@ -1,5 +1,6 @@
 package tk.samgrogan.dudewheresmymovies;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +10,12 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesFra
 
     Boolean twoPane;
     Fragment fragment;
+    public static Activity fa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fa = this;
         setContentView(R.layout.activity_favorites);
         if (findViewById(R.id.container1) != null){
             twoPane = true;
@@ -75,13 +78,13 @@ public class FavoritesActivity extends AppCompatActivity implements FavoritesFra
 
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         //super.onBackPressed();
         Intent returnIntent = new Intent();
         setResult(5,returnIntent);
         finish();
-    }
+    }*/
 
     @Override
     public void onRefresh(Boolean check) {

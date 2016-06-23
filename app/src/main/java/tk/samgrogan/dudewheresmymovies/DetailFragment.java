@@ -67,11 +67,13 @@ public class DetailFragment extends Fragment {
     }
 
     public void onCheck() {
-        if (dbHandler.checkTitlte(mMovie) == true) {
+        if (dbHandler.checkTitlte(mMovie)) {
             favButton.setChecked(true);
             favText.setText("Remove from Favorites");
         }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

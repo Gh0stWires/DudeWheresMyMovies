@@ -104,6 +104,30 @@ public class Movies {
         return  this.posters.get(position);
     }
 
+    public void setMList(List<String> list){
+        this.movies = list;
+    }
+
+    public void setTList(List<String> list){
+        this.titles = list;
+    }
+
+    public  void setDList(List<String> list){
+        this.desc = list;
+    }
+
+    public void setRList(List<String> list){
+        this.rating = list;
+    }
+
+    public void setRDList(List<String> list){
+        this.releaseDate = list;
+    }
+
+    public void setIDList(List<String> list){
+        this.mId = list;
+    }
+
 
 
 

@@ -3,6 +3,7 @@ package tk.samgrogan.dudewheresmymovies;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
 
     Boolean twoPane;
     DetailFragment fragment;
+    MovieFragment movieFragment;
 
 
     @Override
@@ -19,7 +21,10 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.w("onCreate","onCreate");
-        //frag = (DetailFragment) getFragmentManager().findFragmentById(R.id.container);
+
+        if (savedInstanceState != null){
+            movieFragment = (MovieFragment) getFragmentManager().getFragment(savedInstanceState,"FRAGMENT");
+        }
         if (findViewById(R.id.container) != null){
             twoPane = true;
 
@@ -32,7 +37,12 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
 
     }
 
-
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        movieFragment = (MovieFragment) getFragmentManager().findFragmentById(R.id.movie_fragment);
+        getFragmentManager().putFragment(outState,"FRAGMENT", movieFragment);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -58,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
             Intent intent;
             intent = new Intent(this, FavoritesActivity.class);
 
-            startActivityForResult(intent, 2);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -71,20 +81,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.OnM
         return true;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.w("Code", String.valueOf(requestCode));
-        if (requestCode == 2){
-            Log.w("Code", String.valueOf(resultCode));
-            if (resultCode == 5) {
-                fragment = (DetailFragment) getFragmentManager().findFragmentById(R.id.container);
-                fragment.onCheck();
-                Log.w("Check Run", "IT RAN");
-            }
 
-        }
-    }
 
     @Override
     public void onMovie(Movies movie, int position) {
