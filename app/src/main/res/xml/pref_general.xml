@@ -5,6 +5,7 @@
         android:title="@string/list_pref_title"
         android:key="@string/url_list_pref_key"
         android:summary="@string/sortby_summary"
+        android:defaultValue="@string/url_default"
         android:entries="@array/sort"
         android:entryValues="@array/urls">
 

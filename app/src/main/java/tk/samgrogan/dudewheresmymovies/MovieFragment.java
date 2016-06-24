@@ -2,6 +2,10 @@ package tk.samgrogan.dudewheresmymovies;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +46,7 @@ public  class MovieFragment extends Fragment {
     GridView gridView;
     ImageArrayAdapter adapter;
     OnMovieSelected mCallback;
+    private SharedPreferences.OnSharedPreferenceChangeListener prefListener;
 
 
 
@@ -61,6 +67,13 @@ public  class MovieFragment extends Fragment {
         }
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_layout, container, false);
@@ -69,6 +82,22 @@ public  class MovieFragment extends Fragment {
         if (savedInstanceState == null) {
             updateMovies();
         }
+
+        if (!isNetworkAvailable() && savedInstanceState == null){
+            Toast.makeText(getActivity(),"Please connect to the internet to use this app",Toast.LENGTH_LONG).show();
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                updateMovies();
+            }
+        };
+
+        prefs.registerOnSharedPreferenceChangeListener(prefListener);
+
+
         //new GetMovies().execute();
 
         gridView = (GridView) rootView.findViewById(R.id.movie_item_image_grid);
@@ -163,6 +192,7 @@ public  class MovieFragment extends Fragment {
         super.onResume();
         Log.w("onResume", "onResume");
         //updateMovies();
+
 
     }
 
